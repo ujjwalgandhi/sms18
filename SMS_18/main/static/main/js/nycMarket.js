@@ -1,5 +1,6 @@
 var url = '/stocksprimarydata';
 
+
 var xhttp = new XMLHttpRequest();
 
 xhttp.onreadystatechange = function() {
@@ -11,16 +12,16 @@ xhttp.onreadystatechange = function() {
 			alert(data.error);
 		}else{
 			var k=0;
-			var dataIndian = [];
+			var dataNYM = [];
 			for (var c=0; c<data.length; c++) {
-				if(data[c].market_type == "BSE" || data[c].market_type == "Both") {
-					dataIndian[k] = data[c];
+				if(data[c].market_type == "NYM" || data[c].market_type == "Both") {
+					dataNYM[k] = data[c];
 					k++;
 					}
 				}	
-			for (var i = 0; i < dataIndian.length; i++) {
-				document.getElementsByClassName('main')[0].innerHTML += '<div class="stock"><div class="shown"><div class="name" id="stockName">'+dataIndian[i].name+'</div><div class="price">&#8377 <span>' + dataIndian[i].price + ' </span><span class="increasePrice"> &#x25B2; </span><span class="decreasePrice"> &#x25BC; </span></div></div><div class="hidden"><div class="buy" id="myBtn"> <button onclick="modalOpen('+dataIndian[i].id+')">BUY</button> </div><div class="sell" id="myBtn"> <button class="button" onclick="modalOpenS('+dataIndian[i].id+')">SELL</button></div></div></div>';
-				if(dataIndian[i].change>0) {
+			for (var i = 0; i < dataNYM.length; i++) {
+				document.getElementsByClassName('main')[0].innerHTML += '<div class="stock"><div class="shown"><div class="name" id="stockName">'+dataNYM[i].name+'</div><div class="price">&#36 <span>' + (dataNYM[i].price/conversionRate).toFixed(2) + ' </span><span class="increasePrice"> &#x25B2; </span><span class="decreasePrice"> &#x25BC; </span></div></div><div class="hidden"><div class="buy" id="myBtn"> <button onclick="modalOpen('+dataNYM[i].id+')">BUY</button> </div><div class="sell" id="myBtn"> <button class="button" onclick="modalOpenS('+dataNYM[i].id+')">SELL</button></div></div></div>';
+				if(dataNYM[i].change>0) {	
 					document.getElementsByClassName("increasePrice")[i].style.display = "inline";
 				}
 				else if (data[Indian[i]]<0) {
@@ -30,7 +31,7 @@ xhttp.onreadystatechange = function() {
 				
 				
 			var j=1;
-			while (j<=dataIndian.length){
+			while (j<=dataNYM.length){
 			document.getElementsByClassName("stock")[j].addEventListener("click", function(){
 				this.classList.toggle("show");
 			});
@@ -58,33 +59,3 @@ xhttp.send("key=9bBo3YmHufzvSYWjbtkURd");
 function closeBuy() {
 	document.getElementsByClassName("formBuy")[0].style.display = "none";
 }
-
-
-/* HOME PAGE */
-
-/*
-var costPerStock = 50;
-var stocksOwned=0;
-
-var j=0;
-while (j<12) {
-		if (stocksOwned == 0){
-		document.getElementsByClassName('button')[j].disabled = true;
-		document.getElementsByClassName('button')[j].classList.add('disabled');
-		j++;
-	}
-}
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-

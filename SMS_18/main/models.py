@@ -6,7 +6,7 @@ class UserProfile(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE) #extending user model
 	name = models.CharField(max_length=100)	#username as per the db
 	mail_id=models.CharField(max_length=100) #will get from app so no checks are required
-	balance=models.IntegerField(default=0) #this will contain the current balance throughout 
+	balance=models.IntegerField(default=100) #this will contain the current balance throughout 
 	net_worth=models.IntegerField(default=0)
 
 	def __str__(self):
@@ -17,6 +17,7 @@ class Stock(models.Model):
 	stock_price = models.IntegerField(default=0) #Stock price at any instant
 	initial_price = models.IntegerField(default=0)
 	final_price = models.IntegerField(default=0)
+	market_type = models.CharField(max_length=10, null=False, choices=(("BSE",'"BSE"'),("NYM",'"NYM"'),("Both",'"Both"')),default = "Both")
 
 	def __str__(self):
 		return self.product_name
@@ -37,12 +38,20 @@ class GameSwitch(models.Model):
 	def __str__(self):
 		return self.switch_name
 
-class StockPriceVariation(models.Model):
-	stock_id = models.ForeignKey('Stock' , on_delete=models.CASCADE)
-	date_and_time = models.DateTimeField(default=datetime.now, blank=True)
-	price_at_time = models.IntegerField(null=False,default = 0)
-	sequence_id = models.IntegerField(null=False, choices=((1,'1'),(2,'2'),(3,'3')),default = 1)
-	#this will store what sequence of price is it for a particular stock
+class NewsPost(models.Model):#this will be populated only when the time comes, see newspost.py for reference! This model will be populated from admin
+	corresponding_stock=models.ForeignKey('Stock',on_delete=models.CASCADE)
+	post_text=models.CharField(null=False,max_length=4000)
+	time_of_post=models.DateTimeField(default=datetime.now(), blank=True)
 
 	def __str__(self):
-		return self.date_and_time
+		return self.corresponding_stock+":"+self.id
+
+
+class StoredNews(models.Model):#this is for backend purpose only, to populate NewsPost at the right time
+	corresponding_stock=models.ForeignKey('Stock',on_delete=models.CASCADE)
+	post_text=models.CharField(null=False,max_length=4000)
+	minute_interval=models.IntegerField(null=False,default=0)
+
+	def __str__(self):
+		return self.corresponding_stock+":"+self.id
+		

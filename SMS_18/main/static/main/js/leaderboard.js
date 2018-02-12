@@ -1,15 +1,36 @@
-var url = 'http://127.0.0.1:8000/lbdata';
+var url = '/lbdata';
 
 var xhttp = new XMLHttpRequest();
 
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200){
 		var data = JSON.parse(this.responseText);
-		for (var i = 0; i < data.length; i++) {
-			document.getElementsByClassName('main')[0].innerHTML += '<div class="profileLeader"> <div class="leader">'+data[i].name+'</div><div class="balance">'+data[i].net_worth+'</div> </div>';
+		var conversionRate = 64;
+		document.getElementById('conversionRate').innerHTML = conversionRate;
+		if ('error' in data){
+			alert(data.error);
+		}else{
+			for (var i = 0; i < 5; i++) {
+				document.getElementsByClassName('main')[0].innerHTML += '<div class="profileLeader"> <div class="leader"><span>'+ (i+1) +' - </span><span>' + data[i].name + '</span></div><div class="balance">'+data[i].net_worth+'</div> </div>';
+			}
+			if(data[data.length-1].rank>5){
+				console.log(data[data.length-1])
+				document.getElementsByClassName('main')[0].innerHTML += '<div class="profileLeader"> <div class="leader"><span>'+data[data.length-1].rank+' - </span><span>' + data[data.length-1].name + '</span></div><div class="balance">'+data[data.length-1].net_worth+'</div> </div>';
+			}		
 		}
 	}
 }
 
-xhttp.open('GET',url, true);
-xhttp.send();
+xhttp.open('POST',url, true);
+xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+xhttp.send("key=9bBo3YmHufzvSYWjbtkURd&email="+sessionStorage.getItem("email"));
+
+
+
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}	
